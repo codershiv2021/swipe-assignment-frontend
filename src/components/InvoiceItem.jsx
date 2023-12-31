@@ -10,11 +10,13 @@ const InvoiceItem = (props) => {
 
   const itemTable = items.map((item) => (
     <ItemRow
-      key={item.id}
-      item={item}
-      onDelEvent={onRowDel}
-      onItemizedItemEdit={onItemizedItemEdit}
-      currency={currency}
+    key={item.id}
+    item={item}
+    onDelEvent={onRowDel}
+    onItemizedItemEdit={onItemizedItemEdit}
+    currency={currency}
+    isBulkEditing={isBulkEditing}
+    selectedInvoices={selectedInvoices}
     />
   ));
 
@@ -42,6 +44,11 @@ const ItemRow = (props) => {
   const onDelEvent = () => {
     props.onDelEvent(props.item);
   };
+  const handleBulkEditChange = (evt) => {
+    // Handle bulk edit change logic
+    const { checked, value } = evt.target;
+    props.onItemizedItemEdit({ target: { name: 'bulkEdit', value: checked ? value : '' } }, props.item.itemId);
+  };
   return (
     <tr>
       <td style={{ width: "100%" }}>
@@ -56,6 +63,13 @@ const ItemRow = (props) => {
             value: props.item.itemName,
             id: props.item.itemId,
           }}
+        />
+        <Form.Check
+          type="checkbox"
+          value={props.item.itemId}
+          onChange={handleBulkEditChange}
+          checked={props.isBulkEditing && props.selectedInvoices.includes(props.item.itemId)}
+          label="Bulk Edit"
         />
         <EditableField
           onItemizedItemEdit={(evt) =>

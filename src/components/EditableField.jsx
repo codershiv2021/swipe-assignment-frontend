@@ -23,7 +23,10 @@ const EditableField = (props) => {
         min={props.cellData.min}
         name={props.cellData.name}
         id={props.cellData.id}
-        value={props.cellData.value}
+
+        value={isBulkEditing ? bulkEditValue : props.cellData.value}
+
+
         step={props.cellData.step}
         precision={props.cellData.precision}
         aria-label={props.cellData.name}

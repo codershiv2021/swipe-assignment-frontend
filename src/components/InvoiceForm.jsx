@@ -1,3 +1,4 @@
+//
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Row from "react-bootstrap/Row";
@@ -16,6 +17,9 @@ import generateRandomId from "../utils/generateRandomId";
 import { useInvoiceListData } from "../redux/hooks";
 
 const InvoiceForm = () => {
+  const [isBulkEditing, setIsBulkEditing] = useState(false);
+  const [selectedInvoices, setSelectedInvoices] = useState([]);
+
   const dispatch = useDispatch();
   const params = useParams();
   const location = useLocation();
@@ -156,6 +160,21 @@ const InvoiceForm = () => {
     setIsOpen(false);
   };
 
+  const handleBulkEdit = () => {
+    setIsBulkEditing(true);
+  };
+
+  const handleBulkEditCancel = () => {
+    setIsBulkEditing(false);
+    setSelectedInvoices([]);
+  };
+
+  const handleBulkEditApply = () => {
+    // Implement bulk edit logic and update Redux store
+    setIsBulkEditing(false);
+    setSelectedInvoices([]);
+  };
+
   const handleAddInvoice = () => {
     if (isEdit) {
       dispatch(updateInvoice({ id: params.id, updatedInvoice: formData }));
@@ -182,6 +201,7 @@ const InvoiceForm = () => {
       alert("Invoice does not exists!!!!!");
     }
   };
+  
 
   return (
     <Form onSubmit={openModal}>
@@ -196,6 +216,14 @@ const InvoiceForm = () => {
 
       <Row>
         <Col md={8} lg={9}>
+        <InvoiceItem
+            onItemizedItemEdit={onItemizedItemEdit}
+            onRowDel={handleRowDel}
+            currency={formData.currency}
+            items={formData.items}
+            isBulkEditing={isBulkEditing}
+            selectedInvoices={selectedInvoices}
+          />
           <Card className="p-4 p-xl-5 my-3 my-xl-4">
             <div className="d-flex flex-row align-items-start justify-content-between mb-3">
               <div className="d-flex flex-column">
@@ -363,6 +391,33 @@ const InvoiceForm = () => {
         </Col>
         <Col md={4} lg={3}>
           <div className="sticky-top pt-md-3 pt-xl-4">
+          <Button
+              variant="primary"
+              type="button"
+              onClick={handleBulkEdit}
+              className="d-block w-100"
+              disabled={selectedInvoices.length === 0 || isBulkEditing}
+            >
+              Bulk Edit
+            </Button>
+            <Button
+              variant="outline-danger"
+              type="button"
+              onClick={handleBulkEditCancel}
+              className="d-block w-100 mt-2"
+              disabled={!isBulkEditing}
+            >
+              Cancel Bulk Edit
+            </Button>
+            <Button
+              variant="success"
+              type="button"
+              onClick={handleBulkEditApply}
+              className="d-block w-100 mt-2"
+              disabled={!isBulkEditing}
+            >
+              Apply Bulk Edit
+            </Button>
             <Button
               variant="dark"
               onClick={handleAddInvoice}
