@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
-import { Button,Form } from "react-bootstrap/Button";
+import { Button, Form } from "react-bootstrap";
 import { BiTrash } from "react-icons/bi";
 import EditableField from "./EditableField";
 
